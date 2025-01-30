@@ -8,7 +8,7 @@ This guide includes all steps from directory structure setup to Nginx configurat
 
 ```bash
 cd /var/www
-sudo git clone https://gihub.com/NeXeonDash/NeXeonDash.git
+sudo git clone https://gihub.com/NeXeonDash-V1/NeXeonDash-V1.git
 cd NeXeonDash
 ```
 
