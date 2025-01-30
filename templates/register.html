@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - NeXeonDash</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0a',
+                        darker: '#050505',
+                        accent: '#ffffff',
+                        'accent-light': 'rgba(255, 255, 255, 0.1)'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                @apply bg-accent-light backdrop-blur-lg border border-white/10;
+            }
+            .animate-float {
+                animation: float 3s ease-in-out infinite;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-inter min-h-screen flex items-center justify-center p-6">
+    <div class="fixed top-6 left-6">
+        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="w-8 h-8 animate-float">
+            <span class="font-bold text-xl">NeXeonDash</span>
+        </a>
+    </div>
+
+    <div class="glass rounded-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-2">Create Account</h1>
+            <p class="text-gray-400">Join NeXeonDash today</p>
+        </div>
+
+        <form method="POST" class="space-y-6" id="registerForm">
+            <div id="errorMessage" class="hidden bg-red-500/10 text-red-400 p-4 rounded-lg mb-4"></div>
+            <div>
+                <label class="block text-sm font-medium mb-2">Username</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+                    placeholder="Choose a username"
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Email Address</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+                    placeholder="Enter your email"
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Password</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+                    placeholder="Create a password"
+                >
+                <p class="mt-1 text-xs text-gray-400">Must be at least 8 characters</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Confirm Password</label>
+                <input 
+                    type="password" 
+                    name="confirm_password" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+                    placeholder="Confirm your password"
+                >
+            </div>
+
+            <button 
+                type="submit"
+                class="w-full bg-white text-dark font-medium py-3 px-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+                Create Account
+            </button>
+        </form>
+
+        <script>
+            document.getElementById('registerForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const errorDiv = document.getElementById('errorMessage');
+                
+                // Validate password match
+                const password = form.querySelector('input[name="password"]').value;
+                const confirmPassword = form.querySelector('input[name="confirm_password"]').value;
+                
+                if (password !== confirmPassword) {
+                    errorDiv.textContent = "Passwords do not match";
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                // Validate password length
+                if (password.length < 8) {
+                    errorDiv.textContent = "Password must be at least 8 characters long";
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/register', {
+                        method: 'POST',
+                        body: new FormData(form)
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.text();
+                        errorDiv.textContent = error;
+                        errorDiv.classList.remove('hidden');
+                    } else {
+                        window.location.href = '/login';
+                    }
+                } catch (error) {
+                    errorDiv.textContent = "An error occurred. Please try again.";
+                    errorDiv.classList.remove('hidden');
+                }
+            });
+        </script>
+
+        <div class="mt-6 text-center text-sm text-gray-400">
+            Already have an account? 
+            <a href="/login" class="text-white font-medium hover:opacity-80 transition-opacity">
+                Sign in
+            </a>
+        </div>
+    </div>
+</body>
+</html>

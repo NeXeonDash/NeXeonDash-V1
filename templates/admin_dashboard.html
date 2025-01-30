@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - NeXeonDash</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0a0a0a',
+            darker: '#050505',
+            accent: '#ffffff',
+            'accent-light': 'rgba(255, 255, 255, 0.1)'
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass {
+        @apply bg-accent-light backdrop-blur-lg border border-white/10;
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+  </style>
+</head>
+<body class="bg-dark text-white font-inter min-h-screen flex">
+  <!-- Admin Sidebar -->
+  <aside class="w-72 bg-darker p-6 flex flex-col relative overflow-hidden">
+    <div class="flex items-center gap-3 mb-8">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="w-8 h-8 animate-float" />
+      <span class="font-bold text-lg">VelocityAdmin</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-2">
+      <a href="/admin_dashboard" class="flex items-center gap-3 p-4 rounded-lg bg-accent-light text-white text-lg">
+        <i class="material-icons text-xl">dashboard</i>
+        Dashboard
+      </a>
+      <!-- Additional admin links if needed -->
+    </nav>
+    <a
+      href="/admin_logout"
+      class="flex items-center gap-3 p-4 rounded-lg hover:bg-accent-light transition-colors mt-auto text-lg"
+    >
+      <i class="material-icons text-xl">logout</i>
+      Logout
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">Admin Dashboard</h1>
+      <p class="text-gray-400 text-lg">Manage NeXeonDash users</p>
+    </header>
+
+    <!-- Debug Output: Let’s show how many users we have -->
+    <div class="mb-6 text-gray-400">
+      Number of users: {{ users|length }}
+    </div>
+
+    <div class="space-y-6">
+      <div class="glass rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">All Users</h2>
+
+        {% if users|length == 0 %}
+          <p class="text-gray-400">No users found in the database.</p>
+        {% else %}
+          <table class="w-full text-left">
+            <thead class="bg-darker">
+              <tr>
+                <th class="px-4 py-2">User ID</th>
+                <th class="px-4 py-2">Username</th>
+                <th class="px-4 py-2">Email</th>
+                <th class="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr class="border-b border-white/10">
+                <td class="px-4 py-2">{{ user.id }}</td>
+                <td class="px-4 py-2">{{ user.username }}</td>
+                <td class="px-4 py-2">{{ user.email }}</td>
+                <td class="px-4 py-2">
+                  <!-- Edit button removed as per request -->
+                  <form action="/admin_delete_user" method="POST" class="inline">
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+                    <button class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</body>
+</html>

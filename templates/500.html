@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>500 - NeXeonDash</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0a',
+                        darker: '#050505',
+                        accent: '#ffffff',
+                        'accent-light': 'rgba(255, 255, 255, 0.1)'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                @apply bg-accent-light backdrop-blur-lg border border-white/10;
+            }
+            .animate-float {
+                animation: float 3s ease-in-out infinite;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-inter min-h-screen flex items-center justify-center">
+    <div class="text-center p-8 glass rounded-lg">
+        <h1 class="text-5xl font-bold mb-4">500</h1>
+        <p class="text-xl mb-6">An internal server error occurred</p>
+        <a href="/" class="px-6 py-3 bg-white text-dark rounded-lg font-medium hover:bg-gray-100 transition-colors">
+            Return Home
+        </a>
+    </div>
+</body>
+</html>

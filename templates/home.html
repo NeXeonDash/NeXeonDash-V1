@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NeXeonDash</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0a',
+                        darker: '#050505',
+                        accent: '#ffffff',
+                        'accent-light': 'rgba(255, 255, 255, 0.1)'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                @apply bg-accent-light backdrop-blur-lg border border-white/10;
+            }
+            .animate-float {
+                animation: float 3s ease-in-out infinite;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-inter min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="w-8 h-8 animate-float">
+                    <span class="font-bold text-xl">NeXeonDash</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="/login" class="px-6 py-2 rounded-lg hover:bg-accent-light transition-colors">Login</a>
+                    <a href="/register" class="px-6 py-2 bg-white text-dark rounded-lg font-medium hover:bg-gray-100 transition-colors">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h1 class="text-6xl font-bold mb-6">Welcome to NeXeonDash</h1>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+                The modern solution for managing your server resources with ease and efficiency.
+            </p>
+            <div class="flex items-center justify-center gap-6">
+                <a href="/register" class="px-8 py-4 bg-white text-dark rounded-lg font-medium hover:bg-gray-100 transition-colors text-lg">
+                    Get Started
+                </a>
+                <a href="/login" class="px-8 py-4 glass rounded-lg font-medium hover:bg-accent-light transition-colors text-lg">
+                    Sign In
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass rounded-lg p-6">
+                    <div class="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center mb-4">
+                        <i class="material-icons text-2xl">speed</i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Real-time Monitoring</h3>
+                    <p class="text-gray-400">Monitor your server's performance in real-time with our intuitive dashboard.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass rounded-lg p-6">
+                    <div class="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center mb-4">
+                        <i class="material-icons text-2xl">security</i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Secure Access</h3>
+                    <p class="text-gray-400">Advanced security measures to keep your server and data protected.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass rounded-lg p-6">
+                    <div class="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center mb-4">
+                        <i class="material-icons text-2xl">insights</i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Resource Management</h3>
+                    <p class="text-gray-400">Efficiently manage and optimize your server resources from one place.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto glass rounded-lg p-12 text-center">
+            <h2 class="text-4xl font-bold mb-6">Ready to get started?</h2>
+            <p class="text-xl text-gray-400 mb-8">Join thousands of users who trust NeXeonDash for their server management needs.</p>
+            <a href="/register" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-dark rounded-lg font-medium hover:bg-gray-100 transition-colors text-lg">
+                Create Account
+                <i class="material-icons">arrow_forward</i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 border-t border-white/10">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="w-6 h-6">
+                <span class="text-gray-400">© 2024 NeXeonDash. All rights reserved.</span>
+            </div>
+            <div class="flex items-center gap-6 text-gray-400">
+                <a href="#" class="hover:text-white transition-colors">Terms</a>
+                <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                <a href="#" class="hover:text-white transition-colors">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

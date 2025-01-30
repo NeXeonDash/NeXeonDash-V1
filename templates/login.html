@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - NeXeonDash</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0a',
+                        darker: '#050505',
+                        accent: '#ffffff',
+                        'accent-light': 'rgba(255, 255, 255, 0.1)'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                @apply bg-accent-light backdrop-blur-lg border border-white/10;
+            }
+            .animate-float {
+                animation: float 3s ease-in-out infinite;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-inter min-h-screen flex items-center justify-center p-6">
+    <div class="fixed top-6 left-6">
+        <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="w-8 h-8 animate-float">
+            <span class="font-bold text-xl">NeXeonDash</span>
+        </a>
+    </div>
+
+    <div class="glass rounded-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-2">Welcome back</h1>
+            <p class="text-gray-400">Sign in to your account</p>
+        </div>
+
+        <form method="POST" class="space-y-6" id="loginForm">
+            <div id="errorMessage" class="hidden bg-red-500/10 text-red-400 p-4 rounded-lg mb-4"></div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Username</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+                    placeholder="Enter your username"
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Password</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    required
+                    class="w-full px-4 py-3 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+                    placeholder="Enter your password"
+                >
+            </div>
+
+            <button 
+                type="submit"
+                class="w-full bg-white text-dark font-medium py-3 px-4 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+                Sign In
+            </button>
+        </form>
+
+        <script>
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    body: new FormData(form)
+                });
+                
+                const errorDiv = document.getElementById('errorMessage');
+                if (!response.ok) {
+                    const error = await response.text();
+                    errorDiv.textContent = error;
+                    errorDiv.classList.remove('hidden');
+                } else {
+                    window.location.href = '/dashboard';
+                }
+            });
+        </script>
+
+        <div class="mt-6 text-center text-sm text-gray-400">
+            Don't have an account? 
+            <a href="/register" class="text-white font-medium hover:opacity-80 transition-opacity">
+                Create one
+            </a>
+        </div>
+    </div>
+</body>
+</html>

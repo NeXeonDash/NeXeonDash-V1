@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Server - NeXeonDash</title>
+  <!-- Tailwind & Fonts (matching dashboard.html) -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0a0a0a',
+            darker: '#050505',
+            accent: '#ffffff',
+            'accent-light': 'rgba(255, 255, 255, 0.1)'
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Standard CSS instead of @layer directives */
+    .glass {
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    .animate-fade-up {
+      animation: fade-up 1s ease-out;
+    }
+    .animate-wave {
+      animation: wave 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    @keyframes fade-up {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes wave {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      50% {
+        transform: rotate(20deg);
+      }
+    }
+  </style>
+</head>
+<body class="bg-dark text-white font-inter min-h-screen flex">
+
+  <!-- Sidebar (same as dashboard, with create server active) -->
+  <aside class="w-72 bg-darker p-6 flex flex-col relative overflow-hidden">
+    <!-- Logo -->
+    <div class="flex items-center gap-3 mb-8">
+      <img
+        src="{{ url_for('static', filename='images/logo.png') }}"
+        alt="Logo"
+        class="w-8 h-8 animate-float"
+      >
+      <span class="font-bold text-lg">NeXeonDash</span>
+    </div>
+
+    <!-- User Info -->
+    <div class="glass rounded-lg p-4 mb-6">
+      <div class="flex items-center gap-3">
+        <div
+          class="w-12 h-12 rounded-full bg-darker border-2 border-white/20 bg-cover bg-center transition-transform hover:scale-110 duration-300"
+          style="
+            background-image: url('{% if profile_picture %}{{ profile_picture }}{% else %}https://api.dicebear.com/7.x/bottts/svg?seed={{ username }}{% endif %}');
+          "
+        ></div>
+        <div>
+          <div class="font-semibold">{{ username }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 flex flex-col gap-2">
+      <a href="/dashboard" class="flex items-center gap-3 p-4 rounded-lg hover:bg-accent-light transition-colors text-lg">
+        <i class="material-icons text-xl">dashboard</i>
+        Dashboard
+      </a>
+      <a href="{{ ptero_domain }}" target="_blank" class="flex items-center gap-3 p-4 rounded-lg hover:bg-accent-light transition-colors text-lg">
+        <i class="material-icons text-xl">terminal</i>
+        Control Panel
+      </a>
+      <a href="/servers" class="flex items-center gap-3 p-4 rounded-lg hover:bg-accent-light transition-colors text-lg">
+        <i class="material-icons text-xl">dns</i>
+        Servers
+      </a>
+      <a href="/settings" class="flex items-center gap-3 p-4 rounded-lg hover:bg-accent-light transition-colors text-lg">
+        <i class="material-icons text-xl">settings</i>
+        Settings
+      </a>
+      <!-- Current page -->
+      <a href="/create_server" class="flex items-center gap-3 p-4 rounded-lg bg-accent-light text-white transition-colors text-lg">
+        <i class="material-icons text-xl">add_circle_outline</i>
+        Create Server
+      </a>
+    </nav>
+
+    <!-- Logout -->
+    <a href="/logout" class="flex items-center gap-3 p-4 rounded-lg hover:bg-accent-light transition-colors mt-auto text-lg">
+      <i class="material-icons text-xl">logout</i>
+      Logout
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <!-- Header -->
+    <header class="mb-4">
+      <h1 class="text-3xl font-bold mb-1">Create Server</h1>
+      <p class="text-gray-300 text-sm">Manage your server resources and create a new server.</p>
+    </header>
+
+    <!-- Resource Usage Card -->
+    <div class="bg-darker glass rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">Resource Usage</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+        <!-- Memory -->
+        <div class="flex flex-col items-start">
+          <span class="text-sm text-gray-400">Memory Usage</span>
+          <span class="text-lg">
+            {{ total_memory_used }} / {{ max_memory_per_user }} MB
+          </span>
+        </div>
+        <!-- CPU -->
+        <div class="flex flex-col items-start">
+          <span class="text-sm text-gray-400">CPU Usage</span>
+          <span class="text-lg">
+            {{ total_cpu_used }} / {{ max_cpu_per_user }} %
+          </span>
+        </div>
+        <!-- Disk -->
+        <div class="flex flex-col items-start">
+          <span class="text-sm text-gray-400">Disk Usage</span>
+          <span class="text-lg">
+            {{ total_disk_used }} / {{ max_disk_per_user }} MB
+          </span>
+        </div>
+        <!-- Databases -->
+        <div class="flex flex-col items-start">
+          <span class="text-sm text-gray-400">Databases Used</span>
+          <span class="text-lg">
+            {{ total_databases_used }} / {{ max_databases_per_user }}
+          </span>
+        </div>
+        <!-- Backups -->
+        <div class="flex flex-col items-start">
+          <span class="text-sm text-gray-400">Backups Used</span>
+          <span class="text-lg">
+            {{ total_backups_used }} / {{ max_backups_per_user }}
+          </span>
+        </div>
+        <!-- Servers Created -->
+        <div class="flex flex-col items-start">
+          <span class="text-sm text-gray-400">Servers Created</span>
+          <span class="text-lg">
+            {{ existing_count }} / {{ max_servers_per_user }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Server Form -->
+    <div class="bg-darker glass rounded-lg p-6">
+      <form action="/create_server" method="POST" class="flex flex-col gap-6">
+        
+        <!-- Server Name -->
+        <div>
+          <label for="serverName" class="block font-semibold mb-1">Server Name</label>
+          <input
+            id="serverName"
+            type="text"
+            name="server_name"
+            placeholder="MyAwesomeServer"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- Egg ID -->
+        <div>
+          <label for="eggID" class="block font-semibold mb-1">Egg ID</label>
+          <input
+            id="eggID"
+            type="text"
+            name="egg_id"
+            placeholder="paper"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- Build Number -->
+        <div>
+          <label for="buildNumber" class="block font-semibold mb-1">Build Number</label>
+          <input
+            id="buildNumber"
+            type="text"
+            name="build_number"
+            placeholder="latest"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- Memory -->
+        <div>
+          <label for="memory" class="block font-semibold mb-1">Memory (MB)</label>
+          <input
+            id="memory"
+            type="number"
+            name="memory"
+            placeholder="{{ default_values.memory }}"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- CPU -->
+        <div>
+          <label for="cpu" class="block font-semibold mb-1">CPU (%)</label>
+          <input
+            id="cpu"
+            type="number"
+            name="cpu"
+            placeholder="{{ default_values.cpu }}"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- Disk -->
+        <div>
+          <label for="disk" class="block font-semibold mb-1">Disk Space (MB)</label>
+          <input
+            id="disk"
+            type="number"
+            name="disk"
+            placeholder="{{ default_values.disk }}"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- Backups -->
+        <div>
+          <label for="backups" class="block font-semibold mb-1">Number of Backups</label>
+          <input
+            id="backups"
+            type="number"
+            name="backups"
+            placeholder="{{ default_values.backups }}"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- Databases -->
+        <div>
+          <label for="databases" class="block font-semibold mb-1">Number of Databases</label>
+          <input
+            id="databases"
+            type="number"
+            name="databases"
+            placeholder="{{ default_values.databases }}"
+            required
+            class="w-full p-3 rounded bg-dark text-white border border-white/20"
+          />
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="bg-white text-dark px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 transition-colors flex items-center gap-2 justify-center"
+        >
+          <i class="material-icons">check_circle_outline</i>
+          Create Server
+        </button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

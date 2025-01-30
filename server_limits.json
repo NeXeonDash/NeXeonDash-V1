@@ -1,0 +1,9 @@
+{
+  "default_values": {
+    "memory": 1024,
+    "cpu": 100,
+    "disk": 10240,
+    "backups": 3,
+    "databases": 0
+  }
+}

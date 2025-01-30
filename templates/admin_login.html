@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Login - NeXeonDash</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0a0a0a',
+            darker: '#050505',
+            accent: '#ffffff',
+            'accent-light': 'rgba(255, 255, 255, 0.1)'
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass {
+        @apply bg-accent-light backdrop-blur-lg border border-white/10;
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+  </style>
+</head>
+<body class="bg-dark text-white font-inter min-h-screen flex items-center justify-center">
+  <div class="glass p-8 rounded-lg w-full max-w-sm">
+    <h1 class="text-3xl font-bold mb-6 text-center">Admin Login</h1>
+    <form action="/admin_login" method="POST" class="space-y-5">
+      <div>
+        <label class="block text-lg mb-2">Admin Username</label>
+        <input
+          type="text"
+          name="admin_username"
+          class="w-full px-4 py-2 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+          required
+        />
+      </div>
+      <div>
+        <label class="block text-lg mb-2">Admin Password</label>
+        <input
+          type="password"
+          name="admin_password"
+          class="w-full px-4 py-2 rounded-lg bg-darker border border-white/10 focus:outline-none focus:border-white/30 transition-colors"
+          required
+        />
+      </div>
+      <button
+        type="submit"
+        class="px-6 py-3 bg-white text-dark rounded-lg font-medium hover:bg-gray-100 transition-colors w-full"
+      >
+        Log In
+      </button>
+    </form>
+  </div>
+</body>
+</html>
